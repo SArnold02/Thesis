@@ -16,18 +16,25 @@ class MainPage(QWidget):
         super().__init__()
 
         #Import setting from settings.json
-        fileHandler = open("Configs/settings.json")
-        self.settings = json.load(fileHandler) 
+        self.reloadSetting()
 
         #Initialize used variables accross the application
         self.left = left
         self.top = top
         self.width = width
         self.height = height
+        
         self.recorder = Recorder(0, self.settings)
         self.uiRecorder = None
         self.videoSizes = [(320,240), (640, 480), (960, 720)]
+        
+        #Initialize the ui elements
         self.initUI()
+
+    def reloadSetting(self):
+        #Utility function, called when we get back to this screen to reload the setttings
+        fileHandler = open("Configs/settings.json")
+        self.settings = json.load(fileHandler) 
 
     @pyqtSlot(QImage)
     def setImage(self, image, manual=False):

@@ -30,6 +30,12 @@ class UIApp(QWidget):
             print("Invalid swtch try, index is: ", index)
             return
         
+        #Reload the settings in the main page and settings page, when we switch back
+        if index == 1:
+            self.mainPage.reloadSetting()
+        else:
+            self.settingsPage.reloadSetting()
+
         #Switching between the screens
         self.stackedWidget.setCurrentIndex(index)
         
@@ -49,7 +55,7 @@ class UIApp(QWidget):
         self.stackedWidget.addWidget(self.settingsPage)
 
         #Setting up the current screen which should be showed
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(1)
 
         #Setting up a layout for the main application
         self.mainLayout = QHBoxLayout()
