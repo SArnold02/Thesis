@@ -55,7 +55,7 @@ class UIApp(QWidget):
         self.stackedWidget.addWidget(self.settingsPage)
 
         #Setting up the current screen which should be showed
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(0)
 
         #Setting up a layout for the main application
         self.mainLayout = QHBoxLayout()
