@@ -1,0 +1,41 @@
+\chapter{Application requirements and specifications}
+\label{chap:specs}
+
+\par The main goal of the application is to create an alternative way of interacting with a live video. For this purpose a deep learning neural network is used, more precisely a MobileNet model pretrained on the ImageNet dataset, with custom final layers for identification. The machine learning algorithm will identify hand gestures, acting as the controlling tools for the application. 
+
+\section{Application requirements}
+\label{sec:specssec1}
+
+\subsection{Functional requirements}
+\label{sec:specssec1subsec1}
+
+\par The main focus of the application is the alternative way of interacting with the live video feed, providing feature for drawing with a finger, using simple hand gestures for clearing the drawings, for zooming in on a specific section of the video, for changing the volume of the recording and for taking a screenshot.
+\par Besides the hand driven way of interactions, the zooming, the volume settings and the screenshot features all have a specific buttons and toggles, so they can be worked with normally with mouse actions.
+\par The application can also be used as a simple video recording software, providing settings options for camera and microphone selection, changing the folder to which save the video files and screenshots and video file extension options, such as mp4 and avi.
+
+\subsection{Non-functional requirements}
+\label{sec:specssec1subsec2}
+
+\par The application only has one version for the windows operating system, the results of running it on Linux, MacOS or any other operating system is undefined, they have not been test.
+\par The processing of the input images from the video feed is done in real-time with a locked frame rate of 24 frames per second. The hand gesture identification and finger tracking is done on every second or third frame, depending on if the the 24 frames per second is obtainable.
+\par The saving of the video files and images are done by only accessing those particular folders, with a naming convention of Recording\\Screenshot with the current date and time, so conflicts with other existing files is almost impossible, at the very least highly unlikely.
+
+\subsection{System requirements}
+\label{sec:specssec1subsec3}
+
+\par The application only runs Windows operating system, needing the Windows 10 or 11 64-bit version, running on other versions may result in undefined behaviour.
+\par In terms of the CPU the application was tested on Ryzen 7 4800h with a clock speed of 2.9 Gigahertz, from which 20-25 percent was used while running. From this data, an assumption can be drawn that as a baseline, a hardware similar to an intel core i7-9750h with a clock speed of 2.6 Gigahertz is advised. By having a weaker CPU the application may run into lagging issues when it comes to the rel-time performance of image processing.
+\par The RAM used by the application is relatively small, using only 300 megabytes from a 3200 Megahertz unit.
+\par In terms of storage, the application only needs around 300 Megabytes. The real impact will come from the saved video and screenshot files, depending on the file type in which they are saved.
+
+\label{sec:specssec2}
+
+\section{Technical specifications}
+\label{sec:specssec2}
+
+\par For the purpose of easier integration of the deep learning model, the language used to develop the application is python, since most frameworks used for machine learning are written in this.
+\par For creating and working with the MobileNet architecture, I use the TensorFlow \cite{tensorflow2015-whitepaper} and Keras framework \cite{chollet2015keras}. TensorFlow is an open-source project developed by Google giving an easy API for developing machine learning models efficiently, by wrapping up the more complex C++ and CUDA core functionalities. It also supports Keras, which is an open-source neural network library, providing an easy interface for building and teaching models, while also containing several known once, so they can be accessed with ease.
+\par For the video capturing and the opencv library \cite{opencv_library}, which is open-source computer vision library written in mostly C++ and it is often used in machine learning projects. Because of that reason, the data, which is given back is easy to process and use in different models, making the development process that much easier.
+\par For the creation of the graphical user interface, the cross-platform Qt framework is used \cite{QtPage}. It is a wildly used service for creating high quality interfaces and is written in C++, providing good performance while supporting multiple languages like python. It provides various tools and modules, providing a relatively easy environment for UI development.
+\par Besides the major libraries and framework, the win32api package \cite{win32api} is also used to access certain computer specifications, like the width and height of the monitor screen, to align the application at launch.
+\par To store the settings of the user, the json format is used, so the structure of the storage is easy to read for both the application and the user, in case a manual change would be wanted. For this the built in json library \cite{jsonlib} is used in python.

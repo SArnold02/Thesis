@@ -42,6 +42,8 @@ class SettingsPage(QWidget):
         with open("Configs/settings.json", "w") as outfile:
             json.dump(self.settings, outfile)
 
+        self.emitSwitchSignal()
+
     def changeFilePath(self):
         #Function which changes the file path chosen by the windows file explorer
         #Getting the file path from the explorer
@@ -49,6 +51,14 @@ class SettingsPage(QWidget):
         filePath = filedialog.askdirectory()
         self.settings["savePath"] = filePath
         self.filePath.setText(filePath)
+
+    def changeScreenshotFilePath(self):
+        #Function which changes the screenshot file path chosen by the windows file explorer
+        #Getting the file path from the explorer
+        tkinter.Tk().withdraw()
+        filePath = filedialog.askdirectory()
+        self.settings["screenshotPath"] = filePath
+        self.screenshotFilePath.setText(filePath)
 
     def initUI(self):
         #Initializing the ui elements and their positions
@@ -70,17 +80,34 @@ class SettingsPage(QWidget):
         self.filePathLabel = QLabel()
         self.filePathLabel.setText("Video Save File Path")
         self.filePathLabel.setBuddy(self.filePath)
+        self.filePathLabel.setFixedHeight(100)
         self.filePathBtn = QPushButton("Choose Path")
         self.filePathBtn.clicked.connect(self.changeFilePath)
         self.filePathBtn.setFixedWidth(100)
+
+        #Create text widgets for the screenshot menu options
+        self.screenshotFilePath = QLineEdit()
+        self.screenshotFilePath.setText(self.settings["screenshotPath"])
+        self.screenshotFilePath.setReadOnly(True)
+        self.screenshotFilePath.setFixedWidth(300)
+        self.screenshotFilePathLabel = QLabel()
+        self.screenshotFilePathLabel.setText("Screenshot Save File Path")
+        self.screenshotFilePathLabel.setBuddy(self.screenshotFilePath)
+        self.screenshotFilePathLabel.setFixedHeight(100)
+        self.screenshotFilePathBtn = QPushButton("Choose Path")
+        self.screenshotFilePathBtn.clicked.connect(self.changeScreenshotFilePath)
+        self.screenshotFilePathBtn.setFixedWidth(100)
 
         # Create box layout, for the positioning of the widgets
         self.mainLayout = QGridLayout()
         self.mainLayout.addWidget(self.filePathLabel, 0, 0, 1, 0, Qt.AlignHCenter)
         self.mainLayout.addWidget(self.filePath, 1, 0, Qt.AlignRight)
         self.mainLayout.addWidget(self.filePathBtn, 1, 1, Qt.AlignLeft)
-        self.mainLayout.addWidget(self.saveBtn, 2, 0, Qt.AlignCenter)
-        self.mainLayout.addWidget(self.backBtn, 2, 1, Qt.AlignCenter)
+        self.mainLayout.addWidget(self.screenshotFilePathLabel, 2, 0, 1, 0, Qt.AlignHCenter)
+        self.mainLayout.addWidget(self.screenshotFilePath, 3, 0, Qt.AlignRight)
+        self.mainLayout.addWidget(self.screenshotFilePathBtn, 3, 1, Qt.AlignLeft)
+        self.mainLayout.addWidget(self.saveBtn, 4, 0, Qt.AlignCenter)
+        self.mainLayout.addWidget(self.backBtn, 4, 1, Qt.AlignCenter)
 
         #Finalizing the layout of the main screen
         self.setLayout(self.mainLayout)

@@ -81,6 +81,12 @@ class MainPage(QWidget):
         blackImage.load("Presets/Black.png")
         self.setImage(blackImage, manual=True)
 
+    def takeScreenshot(self):
+        #Calling the take screenshot method from the recorder and checking if it was succesfull
+        result = self.recorder.takeScreenshot()
+        if result is None:
+            return None
+
     def emitSwitchSignal(self):
         #Couldn't make lambda functions work, so using a normal one
         self.switchSignal.emit(1)
@@ -93,13 +99,15 @@ class MainPage(QWidget):
         self.livePicture = QLabel(self)
         self.livePicture.resize(160, 120)
 
-        # Create utility and navigation buttons
+        # Create utility and navigation and functional buttons
         self.settingsBtn = QPushButton("Settings")
         self.settingsBtn.clicked.connect(self.emitSwitchSignal)
         self.startBtn = QPushButton("Start recording")
         self.startBtn.clicked.connect(self.startRecorder)
         self.stopBtn = QPushButton("Stop recording")
         self.stopBtn.clicked.connect(self.stopRecorder)
+        self.screenshotBtn = QPushButton("Screenshot")
+        self.screenshotBtn.clicked.connect(self.takeScreenshot)
 
         # Create box layout, for the positioning of the widgets
         self.mainLayout = QGridLayout()
@@ -107,6 +115,7 @@ class MainPage(QWidget):
         self.mainLayout.addWidget(self.settingsBtn, 1, 0, Qt.AlignCenter)
         self.mainLayout.addWidget(self.startBtn, 1, 1, Qt.AlignCenter)
         self.mainLayout.addWidget(self.stopBtn, 1, 2, Qt.AlignCenter)
+        self.mainLayout.addWidget(self.screenshotBtn, 1, 3, Qt.AlignCenter)
 
         #Finalizing the layout of the main screen
         self.setLayout(self.mainLayout)

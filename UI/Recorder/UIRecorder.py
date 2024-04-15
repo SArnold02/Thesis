@@ -2,9 +2,9 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtGui import QImage
 
 import cv2
-from keras.models import load_model
-from keras.applications.mobilenet_v2 import preprocess_input
-import numpy as np
+# from keras.models import load_model
+# from keras.applications.mobilenet_v2 import preprocess_input
+# import numpy as np
 
 class UIRecorder(QThread):
     changePixmap = pyqtSignal(QImage)
@@ -16,7 +16,7 @@ class UIRecorder(QThread):
         self.recorder = recorder
         self.recorder.startRecorder()
 
-        self.model = load_model("./mobile.keras")
+        # self.model = load_model("./mobile.keras")
 
     # def preprocess_image(image):
     #     image = image.resize((224, 224))  # Resize to match MobileNetV2 input size
@@ -25,9 +25,9 @@ class UIRecorder(QThread):
     #     image = np.expand_dims(image, axis=0)  # Add batch dimension
     #     return image
 
-    def predict(self, image):
-        image = preprocess_input(image)
-        self.model.predict(image)
+    # def predict(self, image):
+        # image = preprocess_input(image)
+        # self.model.predict(image)
 
     def run(self):
         while not self.stopped:
@@ -36,11 +36,11 @@ class UIRecorder(QThread):
                 rgbImage = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 h, w, _ = rgbImage.shape
 
-                predImage = cv2.resize(rgbImage, (224, 224))
+                # predImage = cv2.resize(rgbImage, (224, 224))
 
-                # Step 3: Preprocess the image for prediction
-                predImage = np.expand_dims(predImage, axis=0)  # Add batch dimension
-                self.predict(predImage)
+                # # Step 3: Preprocess the image for prediction
+                # predImage = np.expand_dims(predImage, axis=0)  # Add batch dimension
+                # self.predict(predImage)
 
                 convertToQtFormat = QImage(rgbImage.data, w, h, QImage.Format_RGB888)
                 self.changePixmap.emit(convertToQtFormat)
