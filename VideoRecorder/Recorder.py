@@ -17,6 +17,8 @@ class Recorder:
         self.lastVideoFrame = None
 
         #Setting up the variables for the voice recording
+        self.audioFrameRate = 30000
+        self.audioNumberOfChannels = 1
         self.audioCaptureDevice = None
         self.audioStream = None
         self.audioFrames = []
@@ -32,17 +34,21 @@ class Recorder:
         self.videoWriter = cv2.VideoWriter(self.settings["savePath"] + "/TempRecording.mp4", codec, self.captureDevice.get(cv2.CAP_PROP_FPS), (int(self.captureDevice.get(3)),int(self.captureDevice.get(4))))
 
         #Creating the audio recorder device
+        self.audioFrameRate = int(self.captureDevice.get(cv2.CAP_PROP_FPS))*1000
         self.audioCaptureDevice = pyaudio.PyAudio()
-        self.audioStream = self.audioCaptureDevice.open(format=pyaudio.paInt16, channels=1, rate=48000, input=True, frames_per_buffer=1024)
+        self.audioStream = self.audioCaptureDevice.open(format=pyaudio.paInt16, channels=self.audioNumberOfChannels, rate=self.audioFrameRate, input=True, frames_per_buffer=1024)
 
     def getCurrentFrame(self):
         #Checking if the recording has been started, if not return None, meanin the recording is not running
-        if self.captureDevice is None or self.audioCaptureDevice is None or self.audioStream is None:
+        if self.captureDevice is None:
             return None
-
+        
         #Getting the video and audio frames and checking if they have been correctly returned
         ret, frame = self.captureDevice.read()
+        if self.audioCaptureDevice is None or self.audioStream is None:
+            return None
         audioData = self.audioStream.read(1024)
+
         if not ret or audioData is None:
             return None
         
@@ -98,9 +104,9 @@ class Recorder:
     def saveAudio(self):
         #Creating an audio file from the gotten audio input
         wf = wave.open(self.settings["savePath"] + "/TempAudio.wav", 'wb')
-        wf.setnchannels(1)
+        wf.setnchannels(self.audioNumberOfChannels)
         wf.setsampwidth(self.audioCaptureDevice.get_sample_size(pyaudio.paInt16))
-        wf.setframerate(44100)
+        wf.setframerate(self.audioFrameRate)
         wf.writeframes(b''.join(self.audioFrames))
         wf.close()
 
