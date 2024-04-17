@@ -38,7 +38,7 @@ class Recorder:
         #Creating the audio recorder device
         self.audioFrameRate = int(self.captureDevice.get(cv2.CAP_PROP_FPS))*1000
         self.audioCaptureDevice = pyaudio.PyAudio()
-        self.audioStream = self.audioCaptureDevice.open(format=pyaudio.paInt16, channels=self.audioNumberOfChannels, rate=self.audioFrameRate, input=True, frames_per_buffer=1024)
+        self.audioStream = self.audioCaptureDevice.open(format=pyaudio.paInt16, channels=self.audioNumberOfChannels, rate=self.audioFrameRate, input=True, frames_per_buffer=1024, input_device_index=self.settings["audioChoice"])
 
     def getCurrentFrame(self):
         #Checking if the recording has been started, if not return None, meanin the recording is not running

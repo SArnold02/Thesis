@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import  QWidget, QGridLayout, QPushButton, QLineEdit, QLabe
 from PyQt5.QtCore import Qt, pyqtSignal
 
 import cv2
+import pyaudio
 import json
 import tkinter
 from tkinter import filedialog
@@ -18,8 +19,9 @@ class SettingsPage(QWidget):
         self.filePath = None
         self.reloadSetting()
 
-        #Get the available video devices
+        #Get the available video and audio devices
         self.videoDeviceList = self.getVideoDeviceList()
+        self.audioDeviceList = self.getAudioDeviceList()
 
         #Initialize used variables accross the application
         self.left = left
@@ -30,6 +32,19 @@ class SettingsPage(QWidget):
         #Initialize the ui elements
         self.initUI()
 
+    def getAudioDeviceList(self):
+        #Get the list of audio devices for option to swap them
+        p = pyaudio.PyAudio()
+        info = p.get_host_api_info_by_index(0)
+        deviceNumber = info.get('deviceCount')
+        returnArray = []
+
+        for i in range(deviceNumber):
+            if (p.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
+                returnArray.append((i, p.get_device_info_by_host_api_device_index(0, i).get('name')))
+
+        return returnArray
+
     def getVideoDeviceList(self):
         #Since there is no built-in method to acquire the list of video capture devices, I loop through them until I get an error, meaning no available device
         index = 0
@@ -37,7 +52,7 @@ class SettingsPage(QWidget):
         while True:
             device = cv2.VideoCapture(index)
             try:
-                print(device.getBackendName())
+                device.getBackendName()
                 returnArray.append((index))
             except:
                 #Leave the loop id the current device backend name could not be gotten
@@ -86,6 +101,10 @@ class SettingsPage(QWidget):
         #Function to save to the settings variable the currrently selected camera choide
         self.settings["cameraChoice"] = self.cameraSelectionBox[index]
 
+    def changeAudioSelection(self, index):
+        #Function to save to the settings variable the currrently selected audio device choice
+        self.settings["audioChoice"] = self.audioDeviceList[index][0]
+
     def initUI(self):
         #Initializing the ui elements and their positions
         self.setGeometry(self.left, self.top, self.width, self.height)
@@ -132,9 +151,28 @@ class SettingsPage(QWidget):
         self.cameraSelectionBox.setCurrentIndex(self.videoDeviceList.index(int(self.settings["cameraChoice"])))
         self.cameraSelectionBox.currentIndexChanged.connect(self.changeCameraSelection)
         self.cameraSelectionLabel = QLabel()
-        self.cameraSelectionLabel.setText("Select camera")
+        self.cameraSelectionLabel.setText("Select Camera")
         self.cameraSelectionLabel.setBuddy(self.cameraSelectionBox)
         self.cameraSelectionLabel.setFixedHeight(100)
+
+        #Creating widgets for the video audio selection option
+        self.audioSelectionBox = QComboBox(self)
+        for device in self.audioDeviceList:
+            self.audioSelectionBox.addItem(str(device[0]) + " - " + device[1])
+        self.audioSelectionBox.setFixedWidth(400)
+        
+        currentIndex = 0
+        for i, device in enumerate(self.audioDeviceList):
+            if device[0] == self.settings["audioChoice"]:
+                currentIndex = i
+                break
+
+        self.audioSelectionBox.setCurrentIndex(currentIndex)
+        self.audioSelectionBox.currentIndexChanged.connect(self.changeAudioSelection)
+        self.audioSelectionLabel = QLabel()
+        self.audioSelectionLabel.setText("Select Audio")
+        self.audioSelectionLabel.setBuddy(self.audioSelectionBox)
+        self.audioSelectionLabel.setFixedHeight(100)
 
         # Create box layout, for the positioning of the widgets
         self.mainLayout = QGridLayout()
@@ -146,8 +184,10 @@ class SettingsPage(QWidget):
         self.mainLayout.addWidget(self.screenshotFilePathBtn, 3, 1, Qt.AlignLeft)
         self.mainLayout.addWidget(self.cameraSelectionLabel, 4, 0, 1, 0, Qt.AlignHCenter)
         self.mainLayout.addWidget(self.cameraSelectionBox, 5, 0, Qt.AlignRight)
-        self.mainLayout.addWidget(self.saveBtn, 6, 0, Qt.AlignCenter)
-        self.mainLayout.addWidget(self.backBtn, 6, 1, Qt.AlignCenter)
+        self.mainLayout.addWidget(self.audioSelectionLabel, 6, 0, 1, 0, Qt.AlignHCenter)
+        self.mainLayout.addWidget(self.audioSelectionBox, 7, 0, Qt.AlignRight)
+        self.mainLayout.addWidget(self.saveBtn, 8, 0, Qt.AlignCenter)
+        self.mainLayout.addWidget(self.backBtn, 8, 1, Qt.AlignCenter)
 
         #Finalizing the layout of the main screen
         self.setLayout(self.mainLayout)
