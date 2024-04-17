@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import  QWidget, QLabel, QGridLayout, QPushButton
+from PyQt5.QtWidgets import  QWidget, QLabel, QGridLayout, QPushButton, QSlider
 from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal
 from PyQt5.QtGui import QImage, QPixmap
 
@@ -91,6 +91,11 @@ class MainPage(QWidget):
         #Couldn't make lambda functions work, so using a normal one
         self.switchSignal.emit(1)
 
+    def changeVolumeLevel(self, level):
+        #Function to change the volume level in the ui and in the recorder
+        self.volumeLiveLabel.setText(str(level) + "%")
+        self.recorder.setAudioVolumeLevel(level/100.0)
+
     def initUI(self):
         #Initializing the ui elements and their positions
         self.setGeometry(self.left, self.top, self.width, self.height)
@@ -109,13 +114,30 @@ class MainPage(QWidget):
         self.screenshotBtn = QPushButton("Screenshot")
         self.screenshotBtn.clicked.connect(self.takeScreenshot)
 
+        #Create a slider for the volume control
+        self.volumeSlider = QSlider(Qt.Horizontal)
+        self.volumeSlider.setMinimum(0)
+        self.volumeSlider.setMaximum(100)
+        self.volumeSlider.setSingleStep(1)
+        self.volumeSlider.setValue(100)
+        self.volumeSlider.setMaximumWidth(500)
+        self.volumeSlider.setMinimumWidth(300)
+        self.volumeSlider.valueChanged.connect(self.changeVolumeLevel)
+        self.volumeNameLabel = QLabel(self)
+        self.volumeNameLabel.setText("Volume")
+        self.volumeLiveLabel = QLabel(self)
+        self.volumeLiveLabel.setText("100%")
+
         # Create box layout, for the positioning of the widgets
         self.mainLayout = QGridLayout()
         self.mainLayout.addWidget(self.livePicture, 0, 0, 1, 0, Qt.AlignCenter)
-        self.mainLayout.addWidget(self.settingsBtn, 1, 0, Qt.AlignCenter)
-        self.mainLayout.addWidget(self.startBtn, 1, 1, Qt.AlignCenter)
-        self.mainLayout.addWidget(self.stopBtn, 1, 2, Qt.AlignCenter)
-        self.mainLayout.addWidget(self.screenshotBtn, 1, 3, Qt.AlignCenter)
+        self.mainLayout.addWidget(self.volumeNameLabel, 1, 1, 1, 1, Qt.AlignCenter)
+        self.mainLayout.addWidget(self.volumeSlider, 1, 2, 1, 2, Qt.AlignCenter)
+        self.mainLayout.addWidget(self.volumeLiveLabel, 1, 3, 1, 3, Qt.AlignCenter)
+        self.mainLayout.addWidget(self.settingsBtn, 2, 1, Qt.AlignCenter)
+        self.mainLayout.addWidget(self.startBtn, 2, 2, Qt.AlignCenter)
+        self.mainLayout.addWidget(self.stopBtn, 2, 3, Qt.AlignCenter)
+        self.mainLayout.addWidget(self.screenshotBtn, 2, 4, Qt.AlignCenter)
 
         #Finalizing the layout of the main screen
         self.setLayout(self.mainLayout)

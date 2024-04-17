@@ -2,6 +2,7 @@ import os
 import cv2
 import pyaudio
 import wave
+import numpy
 from moviepy.editor import VideoFileClip, AudioFileClip
 from datetime import datetime
 
@@ -19,6 +20,7 @@ class Recorder:
         #Setting up the variables for the voice recording
         self.audioFrameRate = 30000
         self.audioNumberOfChannels = 1
+        self.audioVolumeLevel = 1.0
         self.audioCaptureDevice = None
         self.audioStream = None
         self.audioFrames = []
@@ -55,7 +57,10 @@ class Recorder:
         #If the frame was succesfully retrieved, save for the screenshot functionality
         self.lastVideoFrame = frame
 
-        #Store the current data in the audio buffer
+        #Store the volume controlled data in the audio buffer
+        chunk = numpy.fromstring(audioData, numpy.int16)
+        chunk = chunk * self.audioVolumeLevel
+        audioData = chunk.astype(numpy.int16)
         self.audioFrames.append(audioData)
 
         #Write the video frame to the visual part of the video
@@ -63,6 +68,10 @@ class Recorder:
 
         #Return the current frame
         return frame
+    
+    def setAudioVolumeLevel(self, audioLevel):
+        #The function is given an audioLevel parameter, float between 0 and 1.0 and sets it as the volume level
+        self.audioVolumeLevel = audioLevel
     
     def getCurrentFrameTracked(self):
         #TODO: Implement the tracking and incorporate it
