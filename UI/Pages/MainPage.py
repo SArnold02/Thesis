@@ -14,6 +14,7 @@ class MainPage(QWidget):
 
     def __init__(self, left, top, width, height):
         super().__init__()
+        self.recorder = None
 
         #Import setting from settings.json
         self.reloadSetting()
@@ -34,7 +35,9 @@ class MainPage(QWidget):
     def reloadSetting(self):
         #Utility function, called when we get back to this screen to reload the setttings
         fileHandler = open("Configs/settings.json")
-        self.settings = json.load(fileHandler) 
+        self.settings = json.load(fileHandler)
+        if self.recorder is not None:
+            self.recorder.setSettings(self.settings)
 
     @pyqtSlot(QImage)
     def setImage(self, image, manual=False):

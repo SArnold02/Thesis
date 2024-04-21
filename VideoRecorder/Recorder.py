@@ -25,6 +25,10 @@ class Recorder:
         self.audioStream = None
         self.audioFrames = []
 
+    def setSettings(self, settings):
+        #Utility function to change the settings of the object
+        self.settings = settings
+
     def startRecorder(self):
         #Creating the capturing device for the visual part of the video
         self.captureDevice = cv2.VideoCapture(self.settings["cameraChoice"])

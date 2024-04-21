@@ -32,9 +32,9 @@ class UIApp(QWidget):
         
         #Reload the settings in the main page and settings page, when we switch back
         if index == 1:
-            self.mainPage.reloadSetting()
-        else:
             self.settingsPage.reloadSetting()
+        else:
+            self.mainPage.reloadSetting()
 
         #Switching between the screens
         self.stackedWidget.setCurrentIndex(index)
