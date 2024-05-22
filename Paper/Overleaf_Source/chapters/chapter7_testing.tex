@@ -1,0 +1,21 @@
+\chapter{Application testing}
+\label{chap:testing}
+
+\section{Testing techniques}
+\label{sec:testingsec1}
+
+\par The application was tested using exploratory testing, with little to no scripting. The method is based on trying out different scenarios, analyzing the results, learning the reasons behind them, and finally redesigning parts of the application with newly gained information. Since the application uses a lot of modules from different creators, scripting proved to be challenging in a lot of cases, so most of the testing was done by hand. Most of the error handling was a direct result of the testing process, to ensure application robustness.
+
+\section{Functionality testing}
+\label{sec:testingsec2}
+
+\par The functionalities were mainly tested based on the functional descriptions provided in section \ref{sec:specssec1subsec1d1}. Every one them was analyzed under ideal conditions and under different edge cases. 
+\par Recording was tested with different settings option and missing one, while also taking into consideration abrupt stops, and hardware changes during the process. Stopping was tested thoroughly to ensure that the video is saved in the right folder, with all of the changes done to the frame and audio, including frame by frame checks of the merged video to ensure consistency. Since the screenshot taking is a relatively simple feature, the testing mainly consisted by trying out edge cases, like the start and ending of the recording and checking if the image was saved successfully. 
+\par The volume changes were tested both during and outside the recording process, except the hand gesture controls, which are only present during recording, checking the audio levels in the final video.
+\par Since the settings are saved in a json file, the changes made were also tested outside the application, checking if they are imported correctly. The most important checked was the correctness of the saved data, in every step, so most of the functionalities was checked with a debugger, to check for settings changes.
+\par The drawing part was tested with different edge cases regarding the frequency of the hand gestures, trying to arrive at a sweat spot when it comes to starting a new line. Besides this the functionality was tested in different lighting and distances for gaining insight about the performance of the model.
+
+\section{Model testing}
+\label{sec:testingsec3}
+
+\par To understand the performance of the model, the most important information was always the training and evaluation data during learning. However this data does not guarantee that in reality the model will perform how it supposed to be, since image conditions are always different. For all hand gesture features, multiple scenarios were tested, including low lighting, different backgrounds, far distance and obstacles. With this I was able to understand the performance and the limitations of the model better, which was crucial in the training phase.

@@ -11,17 +11,10 @@ class SettingsPage(QWidget):
     #Signal object, so we can communicate with the holding UIApp class that a screen change is needed
     #Using this allows easier screen addition since they can be added in more sperate blocks
     switchSignal = pyqtSignal(int)
+    initialized = False
 
     def __init__(self, left, top, width, height):
         super().__init__()
-
-        #Import setting from settings.json
-        self.filePath = None
-        self.reloadSetting()
-
-        #Get the available video and audio devices
-        self.videoDeviceList = self.getVideoDeviceList()
-        self.audioDeviceList = self.getAudioDeviceList()
 
         #Initialize used variables accross the application
         self.left = left
@@ -29,8 +22,12 @@ class SettingsPage(QWidget):
         self.width = width
         self.height = height
 
+        #Import setting from settings.json
+        self.reloadSetting()
+
         #Initialize the ui elements
         self.initUI()
+        self.initialized = True
 
     def getAudioDeviceList(self):
         #Get the list of audio devices for option to swap them
@@ -43,6 +40,7 @@ class SettingsPage(QWidget):
             if (p.get_device_info_by_host_api_device_index(0, i).get('maxInputChannels')) > 0:
                 returnArray.append((i, p.get_device_info_by_host_api_device_index(0, i).get('name')))
 
+        p.terminate()
         return returnArray
 
     def getVideoDeviceList(self):
@@ -67,8 +65,37 @@ class SettingsPage(QWidget):
         #Utility function, called when we get back to this screen to reload the setttings
         fileHandler = open("Configs/settings.json")
         self.settings = json.load(fileHandler)
-        if self.filePath is not None:
+        fileHandler.close()
+        if self.initialized:
             self.filePath.setText(self.settings["savePath"])
+            self.screenshotFilePath.setText(self.settings["screenshotPath"])
+
+        #Get the available video and audio devices
+        self.videoDeviceList = self.getVideoDeviceList()
+        self.audioDeviceList = self.getAudioDeviceList()
+
+        #Reload the items for the selections lists
+        if self.initialized:
+            self.cameraSelectionBox.currentIndexChanged.disconnect(self.changeCameraSelection)
+            self.cameraSelectionBox.clear()
+            for device in self.videoDeviceList:
+                self.cameraSelectionBox.addItem("Camera " + str(device))
+            self.cameraSelectionBox.setCurrentIndex(self.videoDeviceList.index(int(self.settings["cameraChoice"])))
+            self.cameraSelectionBox.currentIndexChanged.connect(self.changeCameraSelection)
+
+            self.audioSelectionBox.currentIndexChanged.disconnect(self.changeAudioSelection)
+            self.audioSelectionBox.clear()
+            for device in self.audioDeviceList:
+                self.audioSelectionBox.addItem(str(device[0]) + " - " + device[1])
+            currentIndex = 0
+            for i, device in enumerate(self.audioDeviceList):
+                print(self.settings)
+                print(self.settings["audioChoice"])
+                if device[0] == self.settings["audioChoice"]:
+                    currentIndex = i
+                    break
+            self.audioSelectionBox.setCurrentIndex(currentIndex)
+            self.audioSelectionBox.currentIndexChanged.connect(self.changeAudioSelection)
 
     def emitSwitchSignal(self):
         #Couldn't make lambda functions work, so using a normal one
@@ -99,11 +126,17 @@ class SettingsPage(QWidget):
 
     def changeCameraSelection(self, index):
         #Function to save to the settings variable the currrently selected camera choide
-        self.settings["cameraChoice"] = self.cameraSelectionBox[index]
+        try:
+            self.settings["cameraChoice"] = self.cameraSelectionBox[index]
+        except Exception:
+            return
 
     def changeAudioSelection(self, index):
         #Function to save to the settings variable the currrently selected audio device choice
-        self.settings["audioChoice"] = self.audioDeviceList[index][0]
+        try:
+            self.settings["audioChoice"] = self.audioDeviceList[index][0]
+        except Exception:
+            return
 
     def initUI(self):
         #Initializing the ui elements and their positions
@@ -146,7 +179,7 @@ class SettingsPage(QWidget):
         #Creating widgets for the video camera selection option
         self.cameraSelectionBox = QComboBox(self)
         for device in self.videoDeviceList:
-            self.cameraSelectionBox.addItem(str(device))
+            self.cameraSelectionBox.addItem("Camera " + str(device))
         self.cameraSelectionBox.setFixedWidth(400)
         self.cameraSelectionBox.setCurrentIndex(self.videoDeviceList.index(int(self.settings["cameraChoice"])))
         self.cameraSelectionBox.currentIndexChanged.connect(self.changeCameraSelection)

@@ -1,0 +1,66 @@
+%\documentclass[12pt]{scrreprt}
+\documentclass[12pt]{report} 
+
+% language may be romanian or english (default is english)
+% type may be bachelor or master (default is bachelor)
+\usepackage[language=english, type=bachelor]{style}
+
+%\geometry{a4paper,top=2.5cm,left=3cm,right=2.5cm,bottom=2.5cm}
+%in style
+%controlling the appearance of your headers and footers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\renewcommand{\headrulewidth}{0.2pt}
+\renewcommand{\footrulewidth}{0.2pt}
+
+\begin{document}
+
+\specialization{Computer Science in English}	
+\title{AI-Driven Hand Tracking Application for Real-Time Drawing}					   
+\author{Sali Arnold}											
+\supervisor{Dr.Mihoc Tudor-Dan, Lector Universitar}				
+				
+\maketitle
+
+
+\newpage
+\thispagestyle{empty}
+\mbox{}
+\newpage
+\pagenumbering{roman} 
+
+\cleardoublepage
+ABSTRACT
+\vspace{0.5cm}	
+\hrule
+\vspace{0.5cm}	
+%\cleardoublepage
+
+\par Besides audio, visual articulation of some thoughts can prove quite useful while recording videos. In order to create a more convenient environment in terms of the human-machine interactions, hand gesture recognition proves a great tool. It is a frequently researched field in computer vision with a variety of solutions, from line calculations to machine learning. In this paper the latter is utilised in a video recording application, which aims to create an environment where visual representation of certain ideas can be seamlessly made with static hand gestures. Taking other researches in to account in this field in order to achieve this feat, the TensorFlow pretrained Mobilenet object detection model is utilized, fitted on a custom dataset, created by me. While not perfect the method achieves on average 90+ percent on the five available gestures with reasonable fps on a video card, depending on camera and computer performance and good lightning from the front. For the video recording the opencv, for the visual part, the pyaudio, for the audio part, and the wave, for combining the two, modules are used. The software is only available on windows, because of the path choosing, running on other operating systems will result in undefined behaviour. The application is made with only five interaction, however the addition of additional ones is possible by retraining the deep learning model on the expended dataset and creating handling function for the new features.
+
+\tableofcontents
+
+\newpage
+\pagenumbering{arabic}
+
+\input{chapters/chapter1_introduction}
+%\addcontentsline{toc}{chapter}{Introducere}
+%\addcontentsline{toc}{chapter}{Introduction}
+
+\input{chapters/chapter2_related}
+\input{chapters/chapter3_performance}
+\input{chapters/chapter4_model}
+\input{chapters/chapter5_specifications}
+\input{chapters/chapter6_design}
+\input{chapters/chapter7_testing}
+\input{chapters/chapter8_futureWork}
+
+\input{chapters/chapter9_conclusions}
+%\addcontentsline{toc}{chapter}{Concluzii}
+%\addcontentsline{toc}{chapter}{Conclusions}
+
+\bibliography{references}
+
+\end{document}
