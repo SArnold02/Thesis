@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import  QWidget, QGridLayout, QPushButton, QLineEdit, QLabel, QComboBox
 from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtGui import QCursor
 
 import cv2
 import pyaudio
@@ -89,8 +90,6 @@ class SettingsPage(QWidget):
                 self.audioSelectionBox.addItem(str(device[0]) + " - " + device[1])
             currentIndex = 0
             for i, device in enumerate(self.audioDeviceList):
-                print(self.settings)
-                print(self.settings["audioChoice"])
                 if device[0] == self.settings["audioChoice"]:
                     currentIndex = i
                     break
@@ -142,39 +141,97 @@ class SettingsPage(QWidget):
         #Initializing the ui elements and their positions
         self.setGeometry(self.left, self.top, self.width, self.height)
 
+        #Creating stylesheets
+        buttonStyleSheet = """
+            QPushButton {
+                background-color: SlateBlue; 
+                border: none;
+                color: white;
+                text-align: center;
+                text-decoration: none;
+                font-size: 16px;
+                border-radius: 12px;
+                padding: 10px;
+            }
+            QPushButton:hover {
+                background-color: SteelBlue; 
+                cursor: pointer;
+            }
+            """
+        dropDownListStyleSheet = """
+            QComboBox {
+                border: 1px solid SlateBlue;
+                border-radius: 5px;
+                text-align: center;
+                text-decoration: none;
+                font-size: 16px;
+            }
+            QComboBox::drop-down {
+                border: none;
+            }
+            """
+        labelStyleSheet = """
+            QLabel {
+                text-align: center;
+                text-decoration: none;
+                font-size: 16px;
+                padding: 10px;
+            }
+            """
+        lineEditStyleSheet = """
+            QLineEdit {
+                text-align: center;
+                text-decoration: none;
+                font-size: 16px;
+                padding: 10px;
+            }
+            """
+
         # Create utility and navigation buttons
         self.backBtn = QPushButton("Back")
         self.backBtn.clicked.connect(self.emitSwitchSignal)
         self.backBtn.setFixedWidth(100)
+        self.backBtn.setStyleSheet(buttonStyleSheet)
+        self.backBtn.setCursor(QCursor(Qt.PointingHandCursor))
         self.saveBtn = QPushButton("Save")
         self.saveBtn.clicked.connect(self.saveChanges)
         self.saveBtn.setFixedWidth(100)
+        self.saveBtn.setStyleSheet(buttonStyleSheet)
+        self.saveBtn.setCursor(QCursor(Qt.PointingHandCursor))
 
         #Create text widgets for the menu options
         self.filePath = QLineEdit()
         self.filePath.setText(self.settings["savePath"])
         self.filePath.setReadOnly(True)
         self.filePath.setFixedWidth(400)
+        self.filePath.setStyleSheet(lineEditStyleSheet)
         self.filePathLabel = QLabel()
         self.filePathLabel.setText("Video Save File Path")
         self.filePathLabel.setBuddy(self.filePath)
         self.filePathLabel.setFixedHeight(100)
+        self.filePathLabel.setStyleSheet(labelStyleSheet)
         self.filePathBtn = QPushButton("Choose Path")
         self.filePathBtn.clicked.connect(self.changeFilePath)
-        self.filePathBtn.setFixedWidth(100)
+        self.filePathBtn.setFixedWidth(150)
+        self.filePathBtn.setStyleSheet(buttonStyleSheet)
+        self.filePathBtn.setCursor(QCursor(Qt.PointingHandCursor))
 
         #Create text widgets for the screenshot menu options
         self.screenshotFilePath = QLineEdit()
         self.screenshotFilePath.setText(self.settings["screenshotPath"])
         self.screenshotFilePath.setReadOnly(True)
         self.screenshotFilePath.setFixedWidth(400)
+        self.screenshotFilePath.setStyleSheet(lineEditStyleSheet)
         self.screenshotFilePathLabel = QLabel()
         self.screenshotFilePathLabel.setText("Screenshot Save File Path")
         self.screenshotFilePathLabel.setBuddy(self.screenshotFilePath)
         self.screenshotFilePathLabel.setFixedHeight(100)
+        self.screenshotFilePathLabel.setStyleSheet(labelStyleSheet)
         self.screenshotFilePathBtn = QPushButton("Choose Path")
         self.screenshotFilePathBtn.clicked.connect(self.changeScreenshotFilePath)
-        self.screenshotFilePathBtn.setFixedWidth(100)
+        self.screenshotFilePathBtn.setFixedWidth(150)
+        self.screenshotFilePathBtn.setStyleSheet(buttonStyleSheet)
+        self.screenshotFilePathBtn.setCursor(QCursor(Qt.PointingHandCursor))
 
         #Creating widgets for the video camera selection option
         self.cameraSelectionBox = QComboBox(self)
@@ -187,6 +244,9 @@ class SettingsPage(QWidget):
         self.cameraSelectionLabel.setText("Select Camera")
         self.cameraSelectionLabel.setBuddy(self.cameraSelectionBox)
         self.cameraSelectionLabel.setFixedHeight(100)
+        self.cameraSelectionLabel.setStyleSheet(labelStyleSheet)
+        self.cameraSelectionBox.setStyleSheet(dropDownListStyleSheet)
+        self.cameraSelectionBox.setCursor(QCursor(Qt.PointingHandCursor))
 
         #Creating widgets for the video audio selection option
         self.audioSelectionBox = QComboBox(self)
@@ -202,10 +262,13 @@ class SettingsPage(QWidget):
 
         self.audioSelectionBox.setCurrentIndex(currentIndex)
         self.audioSelectionBox.currentIndexChanged.connect(self.changeAudioSelection)
+        self.audioSelectionBox.setStyleSheet(dropDownListStyleSheet)
+        self.audioSelectionBox.setCursor(QCursor(Qt.PointingHandCursor))
         self.audioSelectionLabel = QLabel()
         self.audioSelectionLabel.setText("Select Audio")
         self.audioSelectionLabel.setBuddy(self.audioSelectionBox)
         self.audioSelectionLabel.setFixedHeight(100)
+        self.audioSelectionLabel.setStyleSheet(labelStyleSheet)
 
         # Create box layout, for the positioning of the widgets
         self.mainLayout = QGridLayout()

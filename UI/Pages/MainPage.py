@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import  QWidget, QLabel, QGridLayout, QPushButton, QSlider, QCheckBox
 from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal, QTimer
-from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtGui import QImage, QPixmap, QCursor
 
 import json
 
@@ -169,6 +169,60 @@ class MainPage(QWidget):
         #Initializing the ui elements and their positions
         self.setGeometry(self.left, self.top, self.width, self.height)
 
+        #Creating stylesheets
+        buttonStyleSheet = """
+            QPushButton {
+                background-color: SlateBlue; 
+                border: none;
+                color: white;
+                text-align: center;
+                text-decoration: none;
+                font-size: 16px;
+                border-radius: 12px;
+                padding: 10px;
+            }
+            QPushButton:hover {
+                background-color: SteelBlue; 
+            }
+            """
+        aiSupportStyleSheet = """
+            QCheckBox {
+                background-color: SlateBlue; 
+                border: none;
+                color: white;
+                text-align: center;
+                text-decoration: none;
+                font-size: 16px;
+                border-radius: 12px;
+                padding: 10px;
+            }
+            """
+        labelStyleSheet = """
+            QLabel {
+                text-align: center;
+                text-decoration: none;
+                font-size: 16px;
+                padding: 10px;
+            }
+            """
+        sliderStyleSheet = """
+            QSlider::groove:horizontal {
+                border: 1px solid SlateBlue;
+                height: 6px;
+            }
+            QSlider::handle:horizontal {
+                background: SlateBlue;
+                width: 10px;
+                height: 10px;
+                margin: -5px -1px;
+                border-radius: 5px;
+                border: 1px solid SlateBlue;
+            }
+            QSlider::sub-page:horizontal {
+                background: SlateBlue
+            }
+            """
+
         # Create a Label object for the live video feed
         self.livePicture = QLabel(self)
         self.livePicture.resize(160, 120)
@@ -178,15 +232,24 @@ class MainPage(QWidget):
         # self.messageLabel.resize(160, 50)
         self.settingsBtn = QPushButton("Settings")
         self.settingsBtn.clicked.connect(self.emitSwitchSignal)
+        self.settingsBtn.setStyleSheet(buttonStyleSheet)
+        self.settingsBtn.setCursor(QCursor(Qt.PointingHandCursor))
         self.startBtn = QPushButton("Start recording")
         self.startBtn.clicked.connect(self.startRecorder)
+        self.startBtn.setStyleSheet(buttonStyleSheet)
+        self.startBtn.setCursor(QCursor(Qt.PointingHandCursor))
         self.stopBtn = QPushButton("Stop recording")
         self.stopBtn.clicked.connect(lambda: self.stopRecorderUtil())
+        self.stopBtn.setStyleSheet(buttonStyleSheet)
+        self.stopBtn.setCursor(QCursor(Qt.PointingHandCursor))
         self.screenshotBtn = QPushButton("Screenshot")
         self.screenshotBtn.clicked.connect(self.takeScreenshot)
+        self.screenshotBtn.setStyleSheet(buttonStyleSheet)
+        self.screenshotBtn.setCursor(QCursor(Qt.PointingHandCursor))
         self.aiSupport = QCheckBox("AI Support")
         self.aiSupport.setChecked(False)
         self.aiSupport.stateChanged.connect(self.switchAISupport)
+        self.aiSupport.setStyleSheet(aiSupportStyleSheet)
 
         #Create a slider for the volume control
         self.volumeSlider = QSlider(Qt.Horizontal)
@@ -197,10 +260,13 @@ class MainPage(QWidget):
         self.volumeSlider.setMaximumWidth(500)
         self.volumeSlider.setMinimumWidth(300)
         self.volumeSlider.valueChanged.connect(self.changeVolumeLevel)
+        self.volumeSlider.setStyleSheet(sliderStyleSheet)
         self.volumeNameLabel = QLabel(self)
         self.volumeNameLabel.setText("Volume")
+        self.volumeNameLabel.setStyleSheet(labelStyleSheet)
         self.volumeLiveLabel = QLabel(self)
         self.volumeLiveLabel.setText("100%")
+        self.volumeLiveLabel.setStyleSheet(labelStyleSheet)
 
         # Create box layout, for the positioning of the widgets
         self.mainLayout = QGridLayout()
