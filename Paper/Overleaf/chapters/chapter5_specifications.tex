@@ -286,15 +286,15 @@
 \par The application needs a working camera and microphone and it only runs on the Windows operating system, 10 or 11 64-bit version, running on other versions may result in undefined behaviour.
 \par By testing the application on a Ryzen 7 4800h and NVIDIA GeForce GTX 1660 Ti, 8 and 30 percent being used respectively, the minimum requirements are Intel Core i7-9750h and a dedicated NVIDIA video card for a smooth experience. The application can run solely on CPU as well, but in that case the lag might too much for a watchable video. In terms of RAM the application needs a minimum of 2600 MB, more is necessary depending on the length of the recording.
 \par In order to run the application using the graphics card the 11.2 version of CUDA has to be installed and setup up, which is a tool developed by NVIDIA for general parallel programming on their GPUs.
-\par In terms of storage, the application only needs around 300 Megabytes. The real impact will come from the saved video and screenshot files.
+\par In terms of storage, the application only needs around 1.8 gigabytes. The real impact will come from the saved video and screenshot files.
 
 \label{sec:specssec2}
 
 \section{Technical specifications}
 \label{sec:specssec2}
 
-\par For the purpose of easier integration of the deep learning model, the language used to develop the application is python, where most frameworks used for machine learning are written.
+\par For the purpose of easier integration of the deep learning model, the development language is python, where most frameworks used for machine learning are written.
 \par For creating and working with the SSD MobileNet architecture, I use the TensorFlow \cite{tensorflow2015-whitepaper} framework. TensorFlow is an open-source project developed by Google giving an easy API for developing machine learning models efficiently, by wrapping up the more complex C++ and CUDA core functionalities.
 \par The opencv library \cite{opencv_library} is used for capturing and working with visuals. It is open-source computer vision library written in mostly C++ and it is often used in computer vision projects, making the integration with the model easier. The pyaudio module \cite{pyaudio}, a cross-platform library, is used for capturing the audio, while the wave module \cite{wave} is used for saving it.  
 \par For the creation of the graphical user interface, the cross-platform Qt framework is used \cite{QtPage}. With the help of this library interfaces can be built in a modular fashion, making development easier and it is written in C++, which provides good performance.
-\par Besides the major libraries, the win32api package \cite{win32api} is also used to access certain computer specifications, like the width and height of the monitor screen, for aligning the application at launch. To store the settings of the user, the json format is used, with the help of the json library \cite{jsonlib}, so the structure of the storage is easy to read for both the application and the user, in case a manual change would be needed.
+\par Besides the major libraries, the win32api package \cite{win32api} is also used to access certain computer specifications, like the width and height of the screen, for aligning the application at launch. To store the settings of the user, the json format is used, with the help of the json library \cite{jsonlib}, so the structure of the storage is easy to read for both the application and the user, in case a manual change would be needed.

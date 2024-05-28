@@ -155,7 +155,6 @@ class SettingsPage(QWidget):
             }
             QPushButton:hover {
                 background-color: SteelBlue; 
-                cursor: pointer;
             }
             """
         dropDownListStyleSheet = """
